@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Movies | LOSTREAM Admin</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
+    .sidebar {
+      background-color: #1f1f1f;
+      height: 100vh;
+      position: fixed;
+      width: 250px;
+      padding-top: 20px;
+    }
+    .sidebar a {
+      color: #ccc;
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #0d6efd;
+      color: #fff;
+      border-radius: 8px;
+    }
+    .content {
+      margin-left: 270px;
+      padding: 20px;
+    }
+    .card {
+      background-color: #1f1f1f;
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+    }
+    .table-dark th, .table-dark td {
+      vertical-align: middle;
+    }
+    .btn-add {
+      background-color: #0d6efd;
+      color: #fff;
+    }
+    .btn-add:hover {
+      background-color: #0b5ed7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h4 class="text-center text-white mb-4">🎬 LOSTREAM Admin</h4>
+    <a href="admin-dashboard.html">🏠 Dashboard</a>
+    <a href="manage-movies.html" class="active">🎥 Manage Movies</a>
+    <a href="manage-series.html">📺 Manage Series</a>
+    <a href="manage-users.html">👥 Manage Users</a>
+    <a href="reports.html">📊 Reports</a>
+    <a href="settings.html">⚙️ Settings</a>
+    <a href="admin-login.html">🚪 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold">Manage Movies</h2>
+      <button class="btn btn-add" data-bs-toggle="modal" data-bs-target="#movieModal">➕ Add Movie</button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="input-group mb-4">
+      <input type="text" id="searchMovie" class="form-control" placeholder="Search movies..." onkeyup="filterMovies()">
+    </div>
+
+    <!-- Movies Table -->
+    <div class="card p-3">
+      <table class="table table-dark table-striped align-middle" id="movieTable">
+        <thead>
+          <tr>
+            <th>Poster</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>Rating</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img src="../assets/images/end-game.png" width="60" class="rounded"></td>
+            <td>Avengers: Endgame</td>
+            <td>Action</td>
+            <td>2019</td>
+            <td>9.0</td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="editMovie(this)">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMovie(this)">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td><img src="../assets/images/inception.jpg" width="60" class="rounded"></td>
+            <td>Inception</td>
+            <td>Sci-Fi</td>
+            <td>2010</td>
+            <td>8.8</td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="editMovie(this)">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMovie(this)">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td><img src="../assets/images/blackpanther.jpg" width="60" class="rounded"></td>
+            <td>Black Panther</td>
+            <td>Action</td>
+            <td>2018</td>
+            <td>8.2</td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="editMovie(this)">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMovie(this)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add/Edit Movie Modal -->
+  <div class="modal fade" id="movieModal" tabindex="-1" aria-labelledby="movieModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title" id="movieModalLabel">Add Movie</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="movieForm" onsubmit="return saveMovie()">
+            <div class="mb-3">
+              <label class="form-label">Movie Title</label>
+              <input type="text" id="movieTitle" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Genre</label>
+              <input type="text" id="movieGenre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Release Year</label>
+              <input type="number" id="movieYear" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rating</label>
+              <input type="number" step="0.1" max="10" id="movieRating" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Poster URL</label>
+              <input type="url" id="moviePoster" class="form-control" placeholder="https://example.com/poster.jpg" required>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Save Movie</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Filter Movies
+    function filterMovies() {
+      const input = document.getElementById("searchMovie").value.toLowerCase();
+      const rows = document.querySelectorAll("#movieTable tbody tr");
+      rows.forEach(row => {
+        const title = row.children[1].innerText.toLowerCase();
+        row.style.display = title.includes(input) ? "" : "none";
+      });
+    }
+
+    // Delete Movie
+    function deleteMovie(btn) {
+      if (confirm("Are you sure you want to delete this movie?")) {
+        btn.closest("tr").remove();
+      }
+    }
+
+    // Edit Movie
+    function editMovie(btn) {
+      const row = btn.closest("tr");
+      const title = row.children[1].innerText;
+      const genre = row.children[2].innerText;
+      const year = row.children[3].innerText;
+      const rating = row.children[4].innerText;
+      document.getElementById("movieTitle").value = title;
+      document.getElementById("movieGenre").value = genre;
+      document.getElementById("movieYear").value = year;
+      document.getElementById("movieRating").value = rating;
+      document.getElementById("movieModalLabel").innerText = "Edit Movie";
+      const modal = new bootstrap.Modal(document.getElementById('movieModal'));
+      modal.show();
+    }
+
+    // Save Movie
+    function saveMovie() {
+      const title = document.getElementById("movieTitle").value.trim();
+      const genre = document.getElementById("movieGenre").value.trim();
+      const year = document.getElementById("movieYear").value.trim();
+      const rating = document.getElementById("movieRating").value.trim();
+      const poster = document.getElementById("moviePoster").value.trim();
+
+      if (!title || !genre || !year || !rating || !poster) {
+        alert("Please fill all fields.");
+        return false;
+      }
+
+      alert("Movie saved successfully!");
+      document.getElementById("movieForm").reset();
+      const modal = bootstrap.Modal.getInstance(document.getElementById('movieModal'));
+      modal.hide();
+      return false;
+    }
+  </script>
+
+</body>
+</html>

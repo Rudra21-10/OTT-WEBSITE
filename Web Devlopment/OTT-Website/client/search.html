@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body {
+      background-color: #141414;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    .search-section {
+      margin-top: 100px;
+      text-align: center;
+    }
+
+    .search-box {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      background-color: #1f1f1f;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .search-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      padding: 12px 20px;
+    }
+
+    .search-box button {
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      padding: 12px 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .search-box button:hover {
+      background-color: #b20710;
+    }
+
+    .results-container {
+      margin-top: 40px;
+    }
+
+    .movie-card {
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+
+    .movie-card img {
+      border-radius: 10px;
+    }
+
+    footer {
+      background: #000;
+      text-align: center;
+      padding: 30px 0;
+      color: #aaa;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .search-box {
+        flex-direction: column;
+        border-radius: 10px;
+      }
+
+      .search-box button {
+        width: 100%;
+        border-radius: 0 0 10px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold text-danger" href="index.html">LOSTREAM</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="series.html">Series</a></li>
+          <li class="nav-item"><a class="nav-link active" href="search.html">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Section -->
+  <section class="search-section container">
+    <h2 class="text-danger mb-4">🔍 Search Your Favorite Titles</h2>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for movies or series..." onkeyup="searchContent()">
+      <button onclick="searchContent()">Search</button>
+    </div>
+
+    <!-- Results -->
+    <div class="results-container row mt-5 g-4" id="results">
+      <!-- Results will appear here -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 LOSTREAM. All rights reserved.</p>
+  </footer>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const allContent = [
+      { title: "Avengers: Endgame", genre: "Action", img: "../assets/images/poster1.jpg", link: "movie-details.html" },
+      { title: "Inception", genre: "Sci-Fi", img: "../assets/images/poster2.jpg", link: "movie-details.html" },
+      { title: "Black Panther", genre: "Action", img: "../assets/images/poster3.jpg", link: "movie-details.html" },
+      { title: "Interstellar", genre: "Sci-Fi", img: "../assets/images/poster4.jpg", link: "movie-details.html" },
+      { title: "The Batman", genre: "Thriller", img: "../assets/images/poster5.jpg", link: "movie-details.html" },
+      { title: "Titanic", genre: "Drama", img: "../assets/images/poster6.jpg", link: "movie-details.html" },
+      { title: "Stranger Things", genre: "Series", img: "../assets/images/series1.jpg", link: "series-details.html" },
+      { title: "Money Heist", genre: "Series", img: "../assets/images/series2.jpg", link: "series-details.html" }
+    ];
+
+    function searchContent() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const resultsContainer = document.getElementById("results");
+
+      resultsContainer.innerHTML = "";
+
+      const filtered = allContent.filter(item => item.title.toLowerCase().includes(query));
+
+      if (filtered.length === 0 && query !== "") {
+        resultsContainer.innerHTML = `<p class='text-center text-secondary'>No results found for "<strong>${query}</strong>"</p>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = `
+          <div class="col-6 col-md-3 movie-card">
+            <a href="${item.link}">
+              <img src="${item.img}" alt="${item.title}" class="img-fluid">
+            </a>
+            <h6 class="mt-2 text-center">${item.title}</h6>
+            <p class="text-center text-secondary small">${item.genre}</p>
+          </div>`;
+        resultsContainer.innerHTML += card;
+      });
+    }
+  </script>
+
+</body>
+</html>

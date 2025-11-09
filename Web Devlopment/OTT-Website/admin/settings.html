@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+    }
+    .card {
+      background-color: #1f1f1f;
+      border: none;
+      color: #fff;
+      border-radius: 12px;
+    }
+    .form-control, .form-select {
+      background-color: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #2a2a2a;
+      color: #fff;
+      border-color: #0d6efd;
+      box-shadow: none;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+    .toggle-switch input {display:none;}
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      background-color: #ccc;
+      border-radius: 26px;
+      top: 0; left: 0; right: 0; bottom: 0;
+      transition: .4s;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 20px; width: 20px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: .4s;
+    }
+    input:checked + .slider {
+      background-color: #0d6efd;
+    }
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="admin-dashboard.html">LOSTREAM Admin</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="adminNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="manage-movies.html">Movies</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-series.html">Series</a></li>
+          <li class="nav-item"><a class="nav-link" href="manage-users.html">Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+          <li class="nav-item"><a class="nav-link active" href="settings.html">Settings</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="container mt-4">
+    <h2 class="mb-4">Admin Settings</h2>
+
+    <div class="row g-4">
+      <!-- Profile Settings -->
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <h5 class="mb-3">Profile Settings</h5>
+          <form id="profileForm" onsubmit="return saveProfile();">
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="adminName" value="Admin User" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="adminEmail" value="admin@streamly.com" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Language</label>
+              <select class="form-select" id="adminLang">
+                <option selected>English</option>
+                <option>Hindi</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Save Profile</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Password Change -->
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <h5 class="mb-3">Change Password</h5>
+          <form id="passwordForm" onsubmit="return changePassword();">
+            <div class="mb-3">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="oldPass" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPass" minlength="6" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPass" minlength="6" required>
+            </div>
+            <button class="btn btn-warning" type="submit">Update Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mt-3">
+      <!-- Notifications -->
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <h5 class="mb-3">Notification Preferences</h5>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>Email Notifications</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailNotify" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>New Subscription Alerts</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="subNotify" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span>System Updates</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="sysNotify">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <button class="btn btn-success" onclick="saveNotifications()">Save Preferences</button>
+        </div>
+      </div>
+
+      <!-- Theme Settings -->
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <h5 class="mb-3">Theme Settings</h5>
+          <div class="mb-3">
+            <label class="form-label">Select Theme</label>
+            <select class="form-select" id="themeSelect" onchange="toggleTheme()">
+              <option value="dark" selected>Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="compactView">
+            <label class="form-check-label" for="compactView">
+              Enable Compact View
+            </label>
+          </div>
+          <button class="btn btn-info" onclick="applyTheme()">Apply Theme</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-5 py-3 bg-dark text-center text-muted">
+    &copy; 2025 Streamly Admin
+  </footer>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Save Profile Info
+    function saveProfile() {
+      alert("Profile updated successfully!");
+      return false;
+    }
+
+    // Change Password Validation
+    function changePassword() {
+      const oldPass = document.getElementById('oldPass').value.trim();
+      const newPass = document.getElementById('newPass').value.trim();
+      const confirmPass = document.getElementById('confirmPass').value.trim();
+
+      if (newPass.length < 6) {
+        alert("New password must be at least 6 characters long.");
+        return false;
+      }
+      if (newPass !== confirmPass) {
+        alert("Passwords do not match!");
+        return false;
+      }
+      alert("Password changed successfully!");
+      document.getElementById('passwordForm').reset();
+      return false;
+    }
+
+    // Save Notification Preferences
+    function saveNotifications() {
+      const email = document.getElementById('emailNotify').checked;
+      const sub = document.getElementById('subNotify').checked;
+      const sys = document.getElementById('sysNotify').checked;
+      alert("Notifications saved:\nEmail: " + email + "\nSubscription: " + sub + "\nSystem: " + sys);
+    }
+
+    // Toggle Theme
+    function toggleTheme() {
+      const theme = document.getElementById('themeSelect').value;
+      if (theme === "light") {
+        document.body.style.backgroundColor = "#f8f9fa";
+        document.body.style.color = "#000";
+      } else {
+        document.body.style.backgroundColor = "#121212";
+        document.body.style.color = "#fff";
+      }
+    }
+
+    // Apply Theme
+    function applyTheme() {
+      const theme = document.getElementById('themeSelect').value;
+      const compact = document.getElementById('compactView').checked;
+      alert(`Theme applied: ${theme}\nCompact view: ${compact}`);
+    }
+  </script>
+</body>
+</html>
